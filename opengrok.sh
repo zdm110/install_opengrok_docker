@@ -40,8 +40,8 @@ function run()
 	docker run -d --restart=always \
 	    --name $CONTAINER_NAME \
 	    -p 8888:8080 \
-	    -v /home/julian/workd/opengrok/src:/opengrok/src \
-	    -v /home/julian/workd/opengrok/data:/opengrok/data \
+	    -v $GROKPATH/src:/opengrok/src \
+	    -v $GROKPATH/data:/opengrok/data \
 	    -e NOMIRROR=1 \
 	    oakchen/opengrok:latest
 	pr_info "\n oakchen/opengrok running."	
