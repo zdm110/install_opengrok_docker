@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GROKPATH=~/opengrok
+GROKPATH=~/workd/opengrok
 CONTAINER_NAME=opengrok
 PORT=8888
 REINDEX="0"
@@ -13,35 +13,35 @@ function pr_info()
 # install docker community edition and pull opengrok official image
 function install()
 {
-	sudo apt install -y curl
-	sudo apt remove docker docker-engine docker.io containerd runc
-	curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-	sudo apt-key fingerprint 0EBFCD88
-	sudo add-apt-repository \
-	   "deb [arch=amd64] https://download.docker.com/linux/debian \
-	   $(lsb_release -cs) \
-	   stable"
-	sudo apt update
-	sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-	sudo docker pull opengrok/docker
-	sudo mkdir -p $GROKPATH/etc
-	sudo mkdir -p $GROKPATH/data
-	sudo mkdir -p $GROKPATH/src
+	#sudo apt install -y curl
+	#sudo apt remove docker docker-engine docker.io containerd runc
+	#curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+	#sudo apt-key fingerprint 0EBFCD88
+	#sudo add-apt-repository \
+	#   "deb [arch=amd64] https://download.docker.com/linux/debian \
+	#   $(lsb_release -cs) \
+	#   stable"
+	#sudo apt update
+	#sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+	#sudo docker pull opengrok/docker
+	mkdir -p $GROKPATH/etc
+	mkdir -p $GROKPATH/data
+	mkdir -p $GROKPATH/src
 	pr_info "\nDone!"
 }
 
 function run()
 {
 	echo "check exist docker opengrok..."
-	sudo docker stop $CONTAINER_NAME
-	sudo docker rm $CONTAINER_NAME
+	docker stop $CONTAINER_NAME
+	docker rm $CONTAINER_NAME
 
 	echo "delete existing data and etc..."
-	sudo rm -rf $GROKPATH/etc/*
-	sudo rm -rf $GROKPATH/data/*
+	rm -rf $GROKPATH/etc/*
+	rm -rf $GROKPATH/data/*
 	
 	echo "run docker image opengrok/docker:latest"
-	sudo docker run -d  \
+	docker run -d  \
 	    --name $CONTAINER_NAME \
 	    -p $PORT:8080/tcp \
 	    -e REINDEX=$REINDEX \
