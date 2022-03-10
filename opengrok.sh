@@ -43,6 +43,7 @@ function run()
 	    -v $GROKPATH/src:/opengrok/src \
 	    -v $GROKPATH/data:/opengrok/data \
 	    -e NOMIRROR=1 \
+	    -e SYNC_PERIOD_MINUTES=0 \
 	    oakchen/opengrok:latest
 	pr_info "\n oakchen/opengrok running."	
 }
