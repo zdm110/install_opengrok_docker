@@ -23,7 +23,7 @@ function install()
 	#   stable"
 	#sudo apt update
 	#sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-	#sudo docker pull opengrok/docker
+	docker pull oakchen/opengrok
 	mkdir -p $GROKPATH/etc
 	mkdir -p $GROKPATH/data
 	mkdir -p $GROKPATH/src
@@ -34,29 +34,37 @@ function run()
 {
 	echo "check exist docker opengrok..."
 	docker stop $CONTAINER_NAME
-	#docker rm $CONTAINER_NAME
+	docker rm $CONTAINER_NAME
 
-	echo "delete existing data and etc..."
-	rm -rf $GROKPATH/etc/*
-	rm -rf $GROKPATH/data/*
-	
-	echo "run docker image opengrok/docker:latest"
-	docker run -d  \
+	echo "run docker image oakchen/opengrok:latest"
+	docker run -d --restart=always \
 	    --name $CONTAINER_NAME \
-	    -p $PORT:8080/tcp \
-	    -e REINDEX=$REINDEX \
-	    -v $GROKPATH/src/:/opengrok/src/ \
-	    -v $GROKPATH/etc/:/opengrok/etc/ \
-	    -v $GROKPATH/data/:/opengrok/data/ \
-	    opengrok/docker:latest
-	pr_info "\n opengrok/docker running."	
+	    -p 8888:8080 \
+	    -v /home/julian/workd/opengrok/src:/opengrok/src \
+	    -v /home/julian/workd/opengrok/data:/opengrok/data \
+	    -e NOMIRROR=1 \
+	    oakchen/opengrok:latest
+	pr_info "\n oakchen/opengrok running."	
 }
 
 # Reindex When you add some new Project 
 function reindex()
 {
-	docker exec $CONTAINER_NAME /scripts/index.sh
-	pr_info "\nDone!"
+	#docker exec $CONTAINER_NAME /scripts/index.sh
+	pr_info "\nNot work now, use run instead!"
+}
+
+function stop()
+{
+	docker stop $CONTAINER_NAME
+	docker rm $CONTAINER_NAME
+}
+
+function clean()
+{
+	echo "delete existing data and etc..."
+	sudo rm -rf $GROKPATH/etc/*
+	sudo rm -rf $GROKPATH/data/*
 }
 
 function usage()
@@ -78,6 +86,12 @@ case $1 in
 		;;
 	"run")
 		run
+		;;
+	"stop")
+		stop
+		;;
+	"clean")
+		clean
 		;;
 	"reindex")
 		reindex
