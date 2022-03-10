@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GROKPATH=~/workd/opengrok
-CONTAINER_NAME=opengrok
+CONTAINER_NAME=opengrok-sunny
 PORT=8888
 REINDEX="0"
 
@@ -34,7 +34,7 @@ function run()
 {
 	echo "check exist docker opengrok..."
 	docker stop $CONTAINER_NAME
-	docker rm $CONTAINER_NAME
+	#docker rm $CONTAINER_NAME
 
 	echo "delete existing data and etc..."
 	rm -rf $GROKPATH/etc/*
@@ -55,7 +55,7 @@ function run()
 # Reindex When you add some new Project 
 function reindex()
 {
-	sudo docker exec opengrok /scripts/index.sh
+	docker exec $CONTAINER_NAME /scripts/index.sh
 	pr_info "\nDone!"
 }
 
